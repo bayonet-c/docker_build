@@ -1,0 +1,41 @@
+FROM centos:8
+
+ENV DISPLAY=:1 \
+	HOME=/home \
+	VNC_PORT=5901 \
+	NOVNC_PORT=6901 \
+	NOVNC_HOME=$HOME/novnc \
+	VNC_PASSWD=vncpasswd \
+	VNC_RESOLUTION=1024x768 \
+	VNC_COL_DEPTH=24 \
+	GTK_IM_MODULE=ibus \
+	XMODIFIERS=@im=ibus \
+	QT_IM_MODULE=ibus
+
+WORKDIR $HOME
+
+# Install basic headless openbox environment
+RUN dnf install -y epel-release \
+    && dnf install -y tigervnc-server wget \
+	&& dnf group -y install "Xfce" \
+    ## && echo -e 'dbus-launch --sh-syntax --exit-with-session \n ibus-daemon -d -x &' >> /etc/xdg/openbox/autostart \
+	&& dbus-uuidgen > /var/lib/dbus/machine-id \
+    && dnf install -y glibc-langpack-en langpacks-zh_CN google-noto-sans-cjk-ttc-fonts ibus-libpinyin \
+    && dnf install -y python3 python3-numpy && alternatives --set python /usr/bin/python3 \
+    && dnf install -y qt5-qtbase libxkbcommon-x11
+
+	# Calibre will move to another image.
+    # && dnf install -y wget && wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | bash /dev/stdin
+
+ADD install_novnc.sh $HOME
+RUN chmod o+x $HOME/install_novnc.sh && /$HOME/install_novnc.sh
+
+ADD bootstrap_xfce.sh /bin
+RUN chmod a+x /bin/bootstrap_xfce.sh
+
+USER root
+
+EXPOSE $VNC_PORT $NOVNC_PORT
+
+# Define default command.
+CMD ["bootstrap_xfce.sh"]

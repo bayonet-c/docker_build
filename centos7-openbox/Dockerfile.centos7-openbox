@@ -1,0 +1,40 @@
+FROM centos:7.7.1908
+
+ENV DISPLAY=:1 \
+	HOME=/home \
+	VNC_PORT=5901 \
+	NOVNC_PORT=6901 \
+	NOVNC_HOME=$HOME/novnc \
+	VNC_PASSWD=vncpasswd \
+	VNC_RESOLUTION=1024x768 \
+	VNC_COL_DEPTH=24 \
+	GTK_IM_MODULE=ibus \
+	XMODIFIERS=@im=ibus \
+	QT_IM_MODULE=ibus
+
+WORKDIR $HOME
+
+# Install basic headless openbox environment
+RUN yum install -y epel-release && yum install -y xterm wget firefox \
+    && yum install -y tigervnc-server openbox tint2 network-manager-applet \
+    && echo -e 'dbus-launch --sh-syntax --exit-with-session \n ibus-daemon -d -x & \n tint2 & \n nm-applet &' >> /etc/xdg/openbox/autostart \
+	&& dbus-uuidgen > /var/lib/dbus/machine-id \
+    && yum install -y ibus ibus-libpinyin cjkuni-ukai-fonts \
+    && yum install -y numpy \
+    && yum install -y qt5-qtbase libxkbcommon-x11
+
+	# Calibre will move to another image.
+    # && dnf install -y wget && wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | bash /dev/stdin
+
+ADD install_novnc.sh $HOME
+RUN chmod o+x $HOME/install_novnc.sh && /$HOME/install_novnc.sh
+
+ADD bootstrap_openbox.sh /bin
+RUN chmod a+x /bin/bootstrap_openbox.sh
+
+USER root
+
+EXPOSE $VNC_PORT $NOVNC_PORT
+
+# Define default command.
+CMD ["bootstrap_openbox.sh"]
