@@ -9,7 +9,8 @@ launch_vnc_server() {
 }
 
 launch_window_manager() {
-    xfce4-session &
+	dbus-launch --sh-syntax --exit-with-session xfce4-session &
+	ibus-daemon -d -x &
 }
 
 launch_novnc() {

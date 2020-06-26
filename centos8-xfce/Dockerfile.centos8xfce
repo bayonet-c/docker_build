@@ -17,9 +17,9 @@ WORKDIR $HOME
 # Install basic headless openbox environment
 RUN dnf install -y epel-release \
     && dnf install -y tigervnc-server wget \
-	&& dnf group -y install "Xfce" \
-    ## && echo -e 'dbus-launch --sh-syntax --exit-with-session \n ibus-daemon -d -x &' >> /etc/xdg/openbox/autostart \
-	&& dbus-uuidgen > /var/lib/dbus/machine-id \
+	&& dnf install -y xfce4-session xfce4-panel xfce4-terminal xfdesktop Thunar xfce4-appfinder xfdesktop xfce4-settings thunar-volman \
+	&& rm /etc/xdg/autostart/xfce-polkit* \
+	&& dbus-uuidgen > /etc/machine-id \
     && dnf install -y glibc-langpack-en langpacks-zh_CN google-noto-sans-cjk-ttc-fonts ibus-libpinyin \
     && dnf install -y python3 python3-numpy && alternatives --set python /usr/bin/python3 \
     && dnf install -y qt5-qtbase libxkbcommon-x11
