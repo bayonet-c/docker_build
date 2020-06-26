@@ -22,7 +22,8 @@ RUN dnf install -y epel-release \
 	&& dbus-uuidgen > /etc/machine-id \
     && dnf install -y glibc-langpack-en langpacks-zh_CN google-noto-sans-cjk-ttc-fonts ibus-libpinyin \
     && dnf install -y python3 python3-numpy && alternatives --set python /usr/bin/python3 \
-    && dnf install -y qt5-qtbase libxkbcommon-x11
+    && dnf install -y qt5-qtbase libxkbcommon-x11 \
+	&& dnf install -y firefox
 
 	# Calibre will move to another image.
     # && dnf install -y wget && wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | bash /dev/stdin
