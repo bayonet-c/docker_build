@@ -1,0 +1,14 @@
+FROM bayonetc/centos8-xfce
+MAINTAINER Jerend Cao "bayonet_c1@163.com"
+
+USER root
+
+## Install software
+RUN dnf install -y qt5-qtbase libxkbcommon-x11 \
+    && dnf install -y wget \
+    && dnf clean all \
+    && wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sh /dev/stdin
+
+VOLUME ["/library"]
+
+EXPOSE 5901 6901 8080
