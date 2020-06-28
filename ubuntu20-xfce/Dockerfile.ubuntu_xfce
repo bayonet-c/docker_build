@@ -1,0 +1,36 @@
+FROM ubuntu
+
+ENV DISPLAY=:1 \
+	HOME=/home \
+	VNC_PORT=5901 \
+	NOVNC_PORT=6901 \
+	NOVNC_HOME=$HOME/novnc \
+	VNC_PASSWD=vncpasswd \
+	VNC_RESOLUTION=1024x768 \
+	VNC_COL_DEPTH=24 \
+	GTK_IM_MODULE=ibus \
+	XMODIFIERS=@im=ibus \
+	QT_IM_MODULE=ibus
+
+WORKDIR $HOME
+
+# Install basic headless environment
+RUN apt update \
+    && apt install -y tigervnc-standalone-server \
+	&& apt install -y xfce4xfce4-terminal \
+	&& apt purge -y pm-utils xscreensaver \
+    && apt install -y python3 python3-numpy && alternatives --set python /usr/bin/python3 \
+	&& apt install -y firefox
+
+ADD install_novnc.sh $HOME
+RUN chmod o+x $HOME/install_novnc.sh && /$HOME/install_novnc.sh
+
+ADD bootstrap_xfce.sh /bin
+RUN chmod a+x /bin/bootstrap_xfce.sh
+
+USER root
+
+EXPOSE $VNC_PORT $NOVNC_PORT
+
+# Define default command.
+CMD ["bootstrap_xfce.sh"]
