@@ -32,8 +32,8 @@ RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && apt-get install -
 	&& dpkg-reconfigure --frontend noninteractive tzdata
 
 # Install XFCE component	
-RUN	apt-get install -y xfce4 xfce4-terminal \
-	&& apt-get purge -y pm-utils xscreensaver
+RUN	apt install -y xfce4 xfce4-terminal \
+	&& apt purge -y pm-utils xscreensaver
 
 # Install TigerVNC	
 RUN	apt-get install -y tigervnc-standalone-server \
