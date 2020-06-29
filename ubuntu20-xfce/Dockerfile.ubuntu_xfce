@@ -16,19 +16,19 @@ ENV DISPLAY=:1 \
 WORKDIR $HOME
 
 # Install basic headless environment
-RUN apt-get update && apt-get install -y apt-utils apt-file net-tools wget
+RUN apt update && apt install -y apt-utils apt-file net-tools wget
 
 # Chinese lanuage installation	
-RUN apt-get -y install language-pack-zh-hans-base language-pack-zh-hans ibus-libpinyin ibus-clutter
+RUN apt install -y language-pack-zh-hans-base language-pack-zh-hans ibus-libpinyin ibus-clutter
 
 # Set locale	
-RUN apt-get install -y locales && rm -rf /var/lib/apt/lists/* \
+RUN apt install -y locales && rm -rf /var/lib/apt/lists/* \
     && localedef -i zh_CN -c -f UTF-8 -A /usr/share/locale/locale.alias zh_CN.UTF-8
 ENV LANGUAGE=zh_CN.UTF-8 \
     LANG=zh_CN.UTF-8
 
 # Timezone setting
-RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && apt-get install -y tzdata \
+RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && apt install -y tzdata \
 	&& dpkg-reconfigure --frontend noninteractive tzdata
 
 # Install XFCE component	
@@ -36,7 +36,7 @@ RUN	apt install -y xfce4 xfce4-terminal \
 	&& apt purge -y pm-utils xscreensaver
 
 # Install TigerVNC	
-RUN	apt-get install -y tigervnc-standalone-server \
+RUN	apt install -y tigervnc-standalone-server \
 	&& mkdir .vnc \		
     && echo "#!/bin/sh\nunset SESSION_MANAGER\nunset DBUS_SESSION_BUS_ADDRESS\n/etc/X11/xinit/xinitrc" > .vnc/xstartup
 
@@ -47,9 +47,9 @@ RUN mkdir -p $NOVNC_HOME/utils/websockify \
 	&& chmod +x -v $NOVNC_HOME/utils/*.sh
 
 # Install others
-RUN apt-get install -y python3 python3-numpy \
+RUN apt install -y python3 python3-numpy \
 	&& update-alternatives --install /usr/bin/python python /usr/bin/python3 1 \
-	&& apt-get install -y firefox
+	&& apt install -y firefox
 
 ADD bootstrap_xfce.sh /bin
 RUN chmod a+x /bin/bootstrap_xfce.sh
