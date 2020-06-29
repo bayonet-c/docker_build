@@ -20,8 +20,7 @@ RUN sed -i 's/archive.ubuntu/mirrors.163/g' /etc/apt/sources.list \
 	&& apt update && apt install -y apt-utils net-tools wget
 
 # Chinese lanuage installation	
-RUN apt -y install language-pack-zh-hans ttf-wqy-microhei ibus-libpinyin \
-	&& ln /etc/fonts/conf.d/65-wqy-microhei.conf /etc/fonts/conf.d/69-language-selector-zh-cn.conf
+RUN apt -y install language-pack-zh-hans ibus-libpinyin
 
 # Timezone setting
 RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime &&apt install -y tzdata \
