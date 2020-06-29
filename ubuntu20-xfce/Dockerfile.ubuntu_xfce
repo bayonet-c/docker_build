@@ -11,30 +11,30 @@ ENV DISPLAY=:1 \
 	DEBIAN_FRONTEND=noninteractive \
 	GTK_IM_MODULE=ibus \
 	XMODIFIERS=@im=ibus \
-	QT_IM_MODULE=ibus
+	QT_IM_MODULE=ibus \
+	LANGUAGE=zh_CN.UTF-8 \
+    LANG=zh_CN.UTF-8
 
 WORKDIR $HOME
 
 # Install basic headless environment
-RUN apt update && apt install -y apt-utils apt-file net-tools wget
+RUN apt update; apt install -y apt-utils apt-file net-tools libnss-wrapper wget
+
+# Set locale	
+RUN apt clean; apt update; apt install -y locales; \
+    /usr/share/locales/install-language-pack zh_CN; locale-gen zh_CN.UTF-8; \
+	dpkg-reconfigure --frontend noninteractive locales
+
+# Timezone setting
+RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && apt install -y tzdata; \
+	dpkg-reconfigure --frontend noninteractive tzdata
+
+# Install XFCE component	
+RUN	apt clean; apt update --fix-missing; \
+    apt install -y xfce4 xfce4-terminal; apt purge -y pm-utils xscreensaver
 
 # Chinese lanuage installation	
 RUN apt install -y language-pack-zh-hans-base language-pack-zh-hans
-
-# Set locale	
-RUN apt install -y locales && rm -rf /var/lib/apt/lists/* \
-    && localedef -i zh_CN -c -f UTF-8 -A /usr/share/locale/locale.alias zh_CN.UTF-8 \
-	&& apt update
-ENV LANGUAGE=zh_CN.UTF-8 \
-    LANG=zh_CN.UTF-8
-
-# Timezone setting
-RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && apt install -y tzdata \
-	&& dpkg-reconfigure --frontend noninteractive tzdata
-
-# Install XFCE component	
-RUN	apt install -y xfce4 xfce4-terminal \
-	&& apt purge -y pm-utils xscreensaver
 
 # Install TigerVNC	
 RUN	apt install -y tigervnc-standalone-server \
