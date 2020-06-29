@@ -19,11 +19,12 @@ WORKDIR $HOME
 RUN apt update && apt install -y apt-utils apt-file net-tools wget
 
 # Chinese lanuage installation	
-RUN apt install -y language-pack-zh-hans-base language-pack-zh-hans ibus-libpinyin ibus-clutter
+RUN apt install -y language-pack-zh-hans-base language-pack-zh-hans
 
 # Set locale	
 RUN apt install -y locales && rm -rf /var/lib/apt/lists/* \
-    && localedef -i zh_CN -c -f UTF-8 -A /usr/share/locale/locale.alias zh_CN.UTF-8
+    && localedef -i zh_CN -c -f UTF-8 -A /usr/share/locale/locale.alias zh_CN.UTF-8 \
+	&& apt update
 ENV LANGUAGE=zh_CN.UTF-8 \
     LANG=zh_CN.UTF-8
 
