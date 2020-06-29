@@ -21,7 +21,8 @@ RUN apt update \
     && /usr/share/locales/install-language-pack zh_CN \
     && locale-gen zh_CN.UTF-8 \
     && dpkg-reconfigure --frontend noninteractive locales \
-    && apt-get -y install language-pack-zh-hans
+    && apt -y install language-pack-zh-hans ttf-wqy-microhei \
+	&& ln /etc/fonts/conf.d/65-wqy-microhei.conf /etc/fonts/conf.d/69-language-selector-zh-cn.conf \
 	&& apt install -y xfce4 xfce4-terminal \
 	&& apt purge -y pm-utils xscreensaver \
     && apt install -y python3 python3-numpy && alternatives --set python /usr/bin/python3 \
