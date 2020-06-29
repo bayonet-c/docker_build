@@ -8,6 +8,7 @@ ENV DISPLAY=:1 \
 	VNC_PASSWD=vncpasswd \
 	VNC_RESOLUTION=1024x768 \
 	VNC_COL_DEPTH=24 \
+	DEBIAN_FRONTEND=noninteractive \
 	GTK_IM_MODULE=ibus \
 	XMODIFIERS=@im=ibus \
 	QT_IM_MODULE=ibus
@@ -15,17 +16,21 @@ ENV DISPLAY=:1 \
 WORKDIR $HOME
 
 # Install basic headless environment
-RUN apt update \
-    && apt install -y tigervnc-standalone-server \
+RUN apt update && apt install -y apt-utils net-tools wget \
 	&& apt install -y locales \
     && /usr/share/locales/install-language-pack zh_CN \
     && locale-gen zh_CN.UTF-8 \
     && dpkg-reconfigure --frontend noninteractive locales \
     && apt -y install language-pack-zh-hans ttf-wqy-microhei \
 	&& ln /etc/fonts/conf.d/65-wqy-microhei.conf /etc/fonts/conf.d/69-language-selector-zh-cn.conf \
-	&& apt install -y xfce4 xfce4-terminal \
+    && ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime &&apt install -y tzdata \
+	&& dpkg-reconfigure --frontend noninteractive tzdata \
+    && apt install -y tigervnc-standalone-server
+RUN	apt install -y xfce4 xfce4-terminal \
 	&& apt purge -y pm-utils xscreensaver \
-    && apt install -y python3 python3-numpy && alternatives --set python /usr/bin/python3 \
+	&& apt install -y ibus-libpinyin \
+    && apt install -y python3 python3-numpy \
+	&& update-alternatives --install /usr/bin/python python /usr/bin/python3 1 \
 	&& apt install -y firefox
 
 ADD install_novnc.sh $HOME
