@@ -19,6 +19,10 @@ WORKDIR $HOME
 RUN sed -i 's/archive.ubuntu/mirrors.163/g' /etc/apt/sources.list \
 	&& apt update && apt install -y apt-utils net-tools wget
 
+# Chinese lanuage installation	
+RUN apt -y install language-pack-zh-hans ttf-wqy-microhei ibus-libpinyin \
+	&& ln /etc/fonts/conf.d/65-wqy-microhei.conf /etc/fonts/conf.d/69-language-selector-zh-cn.conf
+
 # Timezone setting
 RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime &&apt install -y tzdata \
 	&& dpkg-reconfigure --frontend noninteractive tzdata
@@ -26,11 +30,6 @@ RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime &&apt install -y tzd
 # Install XFCE component	
 RUN	apt install -y xfce4 xfce4-terminal \
 	&& apt purge -y pm-utils xscreensaver
-
-# Chinese lanuage installation	
-RUN apt -y install language-pack-zh-hans ttf-wqy-microhei \
-	&& ln /etc/fonts/conf.d/65-wqy-microhei.conf /etc/fonts/conf.d/69-language-selector-zh-cn.conf \
-	&& apt install -y ibus-libpinyin
 
 # Set locale	
 RUN apt install -y locales \
