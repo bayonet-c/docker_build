@@ -35,9 +35,10 @@ RUN	apt clean; apt update --fix-missing; \
     apt install -y xfce4;
 
 # Install TigerVNC and make TigerVNC to start XFCE session	
+# Note echo is called by sh not bash so -e option is ommitted
 RUN	apt install -y tigervnc-standalone-server; \
 	mkdir .vnc; \		
-	echo -e "exec dbus-launch --sh-syntax --exit-with-session xfce4-session &\nexec ibus-daemon -d -x &" > .vnc/xstartup
+	echo "exec dbus-launch --sh-syntax --exit-with-session xfce4-session &\nexec ibus-daemon -d -x &" > .vnc/xstartup
 
 # Install noVNC
 RUN mkdir -p $NOVNC_HOME/utils/websockify; \
