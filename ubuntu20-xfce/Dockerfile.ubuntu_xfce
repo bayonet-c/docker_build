@@ -26,6 +26,10 @@ RUN apt clean; apt update; apt install -y locales; \
 	locale-gen C.UTF-8; \
 	dpkg-reconfigure --frontend noninteractive locales
 
+# Set default keyboard layout
+RUN sed -i 's/XKBLAYOUT=\"\w*"/XKBLAYOUT=\"'us'\"/g' /etc/default/keyboard;\
+    dpkg-reconfigure keyboard-configuration
+
 # Timezone setting
 RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && apt install -y tzdata; \
 	dpkg-reconfigure --frontend noninteractive tzdata
