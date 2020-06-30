@@ -18,5 +18,5 @@ launch_novnc() {
 }
 
 launch_vnc_server
-launch_window_manager
+# launch_window_manager
 launch_novnc

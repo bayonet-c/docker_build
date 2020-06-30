@@ -12,8 +12,8 @@ ENV DISPLAY=:1 \
 	GTK_IM_MODULE=ibus \
 	XMODIFIERS=@im=ibus \
 	QT_IM_MODULE=ibus \
-	LANGUAGE=C.UTF-8 \
-    LANG=C.UTF-8
+	LANGUAGE=zh_CN.UTF-8 \
+    LANG=zh_CN.UTF-8
 
 WORKDIR $HOME
 
@@ -22,8 +22,7 @@ RUN apt update; apt install -y apt-utils apt-file net-tools libnss-wrapper wget
 
 # Install language pack and set locale	
 RUN apt clean; apt update; apt install -y locales; \
-    /usr/share/locales/install-language-pack zh_CN; \
-	locale-gen C.UTF-8; \
+    /usr/share/locales/install-language-pack zh_CN; locale-gen zh_CN.UTF-8; \
 	dpkg-reconfigure --frontend noninteractive locales
 
 # Timezone setting
@@ -37,28 +36,28 @@ RUN	apt clean; apt update --fix-missing; \
 # Chinese lanuage installation	
 # RUN apt install -y language-pack-zh-hans-base language-pack-zh-hans
 
-# Install TigerVNC and make TigerVNC to start XFCE session	
-RUN	apt install -y tigervnc-standalone-server; \
-	mkdir .vnc; \		
-	echo -e "exec dbus-launch --sh-syntax --exit-with-session xfce4-session &\nexec ibus-daemon -d -x &" > .vnc/xstartup
+# Install TigerVNC	
+RUN	apt install -y tigervnc-standalone-server \
+	&& mkdir .vnc \		
+    && echo -e "exec dbus-launch --sh-syntax --exit-with-session xfce4-session &\nexec ibus-daemon -d -x &" > .vnc/xstartup
 
 # Install noVNC
-RUN mkdir -p $NOVNC_HOME/utils/websockify; \
-	wget -qO- https://github.com/novnc/noVNC/archive/v1.1.0.tar.gz | tar xz --strip 1 -C $NOVNC_HOME; \
-	wget -qO- https://github.com/novnc/websockify/archive/v0.9.0.tar.gz | tar xz --strip 1 -C $NOVNC_HOME/utils/websockify; \
-	chmod +x -v $NOVNC_HOME/utils/*.sh
+RUN mkdir -p $NOVNC_HOME/utils/websockify \
+	&& wget -qO- https://github.com/novnc/noVNC/archive/v1.1.0.tar.gz | tar xz --strip 1 -C $NOVNC_HOME \
+	&& wget -qO- https://github.com/novnc/websockify/archive/v0.9.0.tar.gz | tar xz --strip 1 -C $NOVNC_HOME/utils/websockify \
+	&& chmod +x -v $NOVNC_HOME/utils/*.sh
 
 # Install others
-RUN apt install -y python3 python3-numpy; \
-	update-alternatives --install /usr/bin/python python /usr/bin/python3 1; \
-	apt install -y firefox
+RUN apt install -y python3 python3-numpy \
+	&& update-alternatives --install /usr/bin/python python /usr/bin/python3 1 \
+	&& apt install -y firefox
 
-ADD bootstrap.sh /bin
-RUN chmod a+x /bin/bootstrap.sh
+ADD bootstrap_xfce.sh /bin
+RUN chmod a+x /bin/bootstrap_xfce.sh
 
 USER root
 
 EXPOSE $VNC_PORT $NOVNC_PORT
 
 # Define default command.
-CMD ["bootstrap.sh"]
+CMD ["bootstrap_xfce.sh"]
