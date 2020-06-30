@@ -33,6 +33,10 @@ RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && apt install -y tz
 # Install XFCE component	
 RUN	apt install -y xfce4;
 
+# Install Ibus and Chinese support
+RUN apt install ibus-libpinyin ibus-clutter; \
+	apt install language-pack-zh-hans-base language-pack-zh-hans
+
 # Install TigerVNC and make TigerVNC to start XFCE session	
 # Note echo is called by sh not bash so -e option is ommitted
 RUN	apt install -y tigervnc-standalone-server; \
