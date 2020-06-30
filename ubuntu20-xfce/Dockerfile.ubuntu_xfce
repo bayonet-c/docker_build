@@ -31,7 +31,8 @@ RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && apt install -y tz
 	dpkg-reconfigure --frontend noninteractive tzdata
 
 # Install XFCE component	
-RUN	apt install -y xfce4;
+RUN	apt install -y xfce4 xfce4-terminal; \
+	apt remove -y pm-utils xscreensaver*
 
 # Install Ibus and Chinese support
 RUN apt install ibus-libpinyin ibus-clutter; \
@@ -50,9 +51,7 @@ RUN mkdir -p $NOVNC_HOME/utils/websockify; \
 	chmod +x -v $NOVNC_HOME/utils/*.sh
 
 # Install others
-RUN apt install -y python3 python3-numpy; \
-	update-alternatives --install /usr/bin/python python /usr/bin/python3 1; \
-	apt install -y firefox
+RUN	apt install -y firefox
 
 ADD bootstrap.sh /bin
 RUN chmod a+x /bin/bootstrap.sh
