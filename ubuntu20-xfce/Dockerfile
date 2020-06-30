@@ -1,0 +1,68 @@
+FROM ubuntu
+
+ENV DISPLAY=:1 \
+	HOME=/home \
+	VNC_PORT=5901 \
+	NOVNC_PORT=6901 \
+	NOVNC_HOME=$HOME/novnc \
+	VNC_PASSWD=vncpasswd \
+	VNC_RESOLUTION=1024x768 \
+	VNC_COL_DEPTH=24 \
+	DEBIAN_FRONTEND=noninteractive \
+	GTK_IM_MODULE=ibus \
+	XMODIFIERS=@im=ibus \
+	QT_IM_MODULE=ibus \
+	LANGUAGE=C.UTF-8 \
+    LANG=C.UTF-8
+
+WORKDIR $HOME
+
+# Install basic headless environment
+RUN apt update; apt install -y apt-utils apt-file net-tools libnss-wrapper wget
+
+# Install language pack and set locale	
+RUN apt clean; apt update; apt install -y locales; \
+    /usr/share/locales/install-language-pack zh_CN; \
+	locale-gen C.UTF-8; \
+	dpkg-reconfigure --frontend noninteractive locales
+
+# Set default keyboard layout
+RUN sed -i 's/XKBLAYOUT=\"\w*"/XKBLAYOUT=\"us\"/g' /etc/default/keyboard; \
+    dpkg-reconfigure keyboard-configuration
+
+# Timezone setting
+RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && apt install -y tzdata; \
+	dpkg-reconfigure --frontend noninteractive tzdata
+
+# Install XFCE component	
+RUN	apt clean; apt update --fix-missing; \
+    apt install -y xfce4 xfce4-terminal; apt purge -y pm-utils xscreensaver
+
+# Chinese lanuage installation	
+# RUN apt install -y language-pack-zh-hans-base language-pack-zh-hans
+
+# Install TigerVNC and make TigerVNC to start XFCE session	
+RUN	apt install -y tigervnc-standalone-server; \
+	mkdir .vnc; \		
+	echo -e "exec dbus-launch --sh-syntax --exit-with-session xfce4-session &\nexec ibus-daemon -d -x &" > .vnc/xstartup
+
+# Install noVNC
+RUN mkdir -p $NOVNC_HOME/utils/websockify; \
+	wget -qO- https://github.com/novnc/noVNC/archive/v1.1.0.tar.gz | tar xz --strip 1 -C $NOVNC_HOME; \
+	wget -qO- https://github.com/novnc/websockify/archive/v0.9.0.tar.gz | tar xz --strip 1 -C $NOVNC_HOME/utils/websockify; \
+	chmod +x -v $NOVNC_HOME/utils/*.sh
+
+# Install others
+RUN apt install -y python3 python3-numpy; \
+	update-alternatives --install /usr/bin/python python /usr/bin/python3 1; \
+	apt install -y firefox
+
+ADD bootstrap.sh /bin
+RUN chmod a+x /bin/bootstrap.sh
+
+USER root
+
+EXPOSE $VNC_PORT $NOVNC_PORT
+
+# Define default command.
+CMD ["bootstrap.sh"]
