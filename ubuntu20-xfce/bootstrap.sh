@@ -5,7 +5,7 @@ launch_vnc_server() {
 	echo $VNC_PASSWD | vncpasswd -f > $HOME/.vnc/passwd
     chmod 0400 $HOME/.vnc/passwd
 
-	vncserver $DISPLAY -geometry $VNC_RESOLUTION -depth $VNC_COL_DEPTH
+	vncserver $DISPLAY -geometry $VNC_RESOLUTION -depth $VNC_COL_DEPTH -localhost no
 }
 
 launch_window_manager() {
