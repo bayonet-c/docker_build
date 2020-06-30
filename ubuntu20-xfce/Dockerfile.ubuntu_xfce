@@ -32,7 +32,7 @@ RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && apt install -y tz
 
 # Install XFCE component	
 RUN	apt clean; apt update --fix-missing; \
-    apt install -y xfce4 xfce4-terminal; apt purge -y pm-utils xscreensaver
+    apt install -y xfce4;
 
 # Install TigerVNC and make TigerVNC to start XFCE session	
 RUN	apt install -y tigervnc-standalone-server; \
