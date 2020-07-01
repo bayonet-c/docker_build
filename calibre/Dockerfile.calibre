@@ -9,7 +9,7 @@ USER root
 ## Install software
 RUN	apt install -y python3 python3-numpy; \
     update-alternatives --install /usr/bin/python python /usr/bin/python3 1; \
-	apt install -y qt5-default; \
+	apt install -y qt5-default
 
 RUN	wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sh /dev/stdin
 
