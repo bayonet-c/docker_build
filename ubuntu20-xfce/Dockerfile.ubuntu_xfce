@@ -31,7 +31,7 @@ RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && apt install -y tz
 	dpkg-reconfigure --frontend noninteractive tzdata
 
 # Install XFCE component and disable screensaver
-RUN	apt install -y xfce4; xset s 0 0; xset s noblank
+RUN	apt install -y xfce4; xset s off
 
 # Install Ibus and Chinese support
 RUN apt install ibus-libpinyin ibus-clutter; \
