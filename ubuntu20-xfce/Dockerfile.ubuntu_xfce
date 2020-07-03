@@ -37,7 +37,7 @@ RUN	apt install -y xfce4
 RUN apt install ibus-libpinyin ibus-clutter; \
 	apt install language-pack-zh-hans-base language-pack-zh-hans
 
-# Install TigerVNC and make TigerVNC to start XFCE session	
+# Install TigerVNC, disable screen saver and make TigerVNC to start XFCE session	
 # Note echo is called by sh not bash so -e option is ommitted
 RUN	apt install -y tigervnc-standalone-server; \
 	xset s off; \
