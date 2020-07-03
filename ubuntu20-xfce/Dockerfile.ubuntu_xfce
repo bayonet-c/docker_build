@@ -30,8 +30,8 @@ RUN apt clean; apt update; apt install -y locales; \
 RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && apt install -y tzdata; \
 	dpkg-reconfigure --frontend noninteractive tzdata
 
-# Install XFCE component and disable screensaver
-RUN	apt install -y xfce4; xset s off
+# Install XFCE component
+RUN	apt install -y xfce4
 
 # Install Ibus and Chinese support
 RUN apt install ibus-libpinyin ibus-clutter; \
@@ -40,6 +40,7 @@ RUN apt install ibus-libpinyin ibus-clutter; \
 # Install TigerVNC and make TigerVNC to start XFCE session	
 # Note echo is called by sh not bash so -e option is ommitted
 RUN	apt install -y tigervnc-standalone-server; \
+	xset s off; \
 	mkdir .vnc; \		
 	echo "#!/bin/sh\nunset SESSION_MANAGER\nunset DBUS_SESSION_BUS_ADDRESS\nexec dbus-launch --sh-syntax --exit-with-session xfce4-session &\nexec ibus-daemon -d -x &" > .vnc/xstartup
 
