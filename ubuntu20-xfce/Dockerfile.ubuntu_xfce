@@ -21,7 +21,7 @@ WORKDIR $HOME
 RUN apt update; apt install -y apt-utils apt-file net-tools libnss-wrapper vim wget
 
 # Install language pack and set locale	
-RUN apt clean; apt update; apt install language-pack-zh-hans-base language-pack-zh-hans; \
+RUN apt clean; apt update; apt install -y language-pack-zh-hans-base language-pack-zh-hans; \
 	apt install -y locales; \
 	/usr/share/locales/install-language-pack zh_CN; \
 	locale-gen C.UTF-8; \
@@ -35,7 +35,7 @@ RUN ln -fs /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && apt install -y tz
 RUN	apt install -y xfce4
 
 # Install Ibus
-RUN apt install ibus-libpinyin ibus-clutter
+RUN apt install -y ibus-libpinyin ibus-clutter
 	
 
 # Install TigerVNC, disable screen saver and make TigerVNC to start XFCE session	
