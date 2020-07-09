@@ -10,7 +10,8 @@ launch_vnc_server() {
 	# Disable screensaver and power management
 	xset -dpms
 	xset s noblank
-	xset s off}
+	xset s off
+}
 
 launch_window_manager() {
 	dbus-launch --sh-syntax --exit-with-session xfce4-session &
