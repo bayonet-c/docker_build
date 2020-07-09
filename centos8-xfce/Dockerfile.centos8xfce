@@ -21,10 +21,11 @@ RUN dnf install -y epel-release; dnf update; \
 # Install vnc and XFCE
 RUN	dnf install -y tigervnc-server; \ 
 	mkdir .vnc; \
-	echo -e "#!/bin/sh\nunset SESSION_MANAGER\nunset DBUS_SESSION_BUS_ADDRESS\nexec dbus-launch --sh-syntax --exit-with-session xfce4-session &\nexec ibus-daemon -d -x &" > .vnc/xstartup
+	echo -e "#!/bin/sh\nunset SESSION_MANAGER\nunset DBUS_SESSION_BUS_ADDRESS\n" > .vnc/xstartup
 
 # Install XFCE
 RUN	dnf install -y xfce4-session xfce4-panel xfce4-terminal xfdesktop Thunar xfce4-appfinder xfdesktop xfce4-settings thunar-volman; \
+	rm /etc/xdg/autostart/xfce-polkit*; \
 	dbus-uuidgen > /etc/machine-id
 
 # Install language support
