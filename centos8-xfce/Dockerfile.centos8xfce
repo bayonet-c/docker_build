@@ -18,6 +18,10 @@ WORKDIR $HOME
 RUN dnf install -y epel-release; dnf update; \
 	dnf install -y wget vim-enhanced
 
+# Set up time zone
+RUN ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime; \
+	echo Asia/Shanghai > /etc/timezone
+
 # Install vnc and XFCE
 RUN	dnf install -y tigervnc-server; \ 
 	mkdir .vnc; \
@@ -28,8 +32,9 @@ RUN	dnf install -y xfce4-session xfce4-panel xfce4-terminal xfdesktop Thunar xfc
 	rm /etc/xdg/autostart/xfce-polkit*; \
 	dbus-uuidgen > /etc/machine-id
 
-# Install language support
-RUN	dnf install -y glibc-langpack-en langpacks-zh_CN google-noto-sans-cjk-ttc-fonts ibus-libpinyin
+# Install language support and set locale
+RUN	dnf install -y glibc-langpack-en langpacks-zh_CN google-noto-sans-cjk-ttc-fonts ibus-libpinyin; \
+	localedef -i en_US -f UTF-8 en_US.UTF-8
 
 # Install python3
 RUN dnf install -y python3 python3-numpy; alternatives --set python /usr/bin/python3
