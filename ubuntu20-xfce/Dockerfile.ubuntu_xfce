@@ -36,12 +36,10 @@ RUN	apt install -y xfce4
 
 # Install Ibus
 RUN apt install -y ibus-libpinyin ibus-clutter
-	
 
 # Install TigerVNC, disable screen saver and make TigerVNC to start XFCE session	
 # Note echo is called by sh not bash so -e option is ommitted
 RUN	apt install -y tigervnc-standalone-server; \
-	xset s off; \
 	mkdir .vnc; \		
 	echo "#!/bin/sh\nunset SESSION_MANAGER\nunset DBUS_SESSION_BUS_ADDRESS\nexec dbus-launch --sh-syntax --exit-with-session xfce4-session &\nexec ibus-daemon -d -x &" > .vnc/xstartup
 

@@ -6,6 +6,11 @@ launch_vnc_server() {
     chmod 0400 $HOME/.vnc/passwd
 
 	vncserver $DISPLAY -geometry $VNC_RESOLUTION -depth $VNC_COL_DEPTH -localhost no
+
+	# Disable screensaver and power management
+	xset -dpms
+	xset s noblank
+	xset s off
 }
 
 launch_window_manager() {
