@@ -1,0 +1,22 @@
+zfs create -o volblocksize=32k -V 10G tslpool/iscsi1
+zfs set sync=disabled tslpool/iscsi1
+targetcli
+block/ create name=block_backend dev=/dev/zvol/tslpool/iscsi1
+cd /iscsi
+create iqn.2017-11.com.mydomain.ad.zfstest:iscsidisk1
+cd /iscsi/iqn.2017-11.com.mydomain.ad.zfstest:iscsidisk1/tpg1/acls
+# create acl with the initiator (client) name here, not the one you just created
+create iqn.1991-05.com.microsoft:dc1.ad.mydomain.com
+cd iqn.1991-05.com.microsoft:dc1.ad.mydomain.com
+set auth userid=user
+set auth password=12to16characters
+cd /iscsi/iqn.2017-11.com.mydomain.ad.zfstest:iscsidisk1/tpg1/luns
+create /backstores/block/block_backend
+cd /
+ls
+saveconfig
+exit
+systemctl enable target.service
+systemctl restart target.service
+firewall-cmd --permanent --add-port=3260/tcp
+firewall-cmd --reload
