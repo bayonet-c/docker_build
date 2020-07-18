@@ -18,8 +18,8 @@ RUN yum update -y; \
 
 RUN sed -i '/^listen-address/d' /etc/privoxy/config; \
     sed -i '/^forward-socks5t/d' /etc/privoxy/config; \
-    echo list-address 0.0.0.0:$SS_LOCAL_PORT >> /etc/privoxy/config; \
-    echo forward-socks5t / 127.0.0.1:$FWD_PORT >> /etc/privoxy/config
+    echo listen-address 0.0.0.0:$SS_LOCAL_PORT >> /etc/privoxy/config; \
+    echo forward-socks5t / 127.0.0.1:$FWD_PORT . >> /etc/privoxy/config
 
 ADD bootstrap.sh /bin
 RUN chmod a+x /bin/bootstrap.sh
