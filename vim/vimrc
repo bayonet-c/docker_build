@@ -1,0 +1,116 @@
+set encoding=utf-8
+set fileencodings=utf-8,ucs-bom,gbk,gb2312,gb18030,default
+set fileformats=unix,dos,mac	" Prefer UNIX over Windows over OSX
+set nocompatible	" Enable enhanced features not compatible with vi
+
+syntax on			" Syntax colored
+filetype off		" Disable filetype detection from filename
+filetype plugin indent on	" Enable file-type dependent plugin loading and indent syntax
+set shell=bash
+set nobackup		" Avoid confliction with some plugins
+set nowritebackup	" Avoid confliction with some plugins
+set noerrorbells	" No beeps
+set autowrite		" Automatically save before :next, :makee etc
+set autoread		" Automatically reread changed files"a
+set confirm			" Need to confirm with read-only and un-saved files
+set hidden			" Allow buffer switch when un-saved
+set noexpandtab		" Don't expand TAB with spaces
+set splitright		" Split window on right
+set splitbelow		" Split window below
+set clipboard+=unnamed	" Shared clipboard"
+set history=1000	" Command history
+set laststatus=2	" Height of command line
+set number			" Enable line numbers
+set numberwidth=4	" Line number width
+set ruler			" Enable ruler
+set showmatch		" Show paired brackets
+set matchtime=1		" Time period for showing paired brackets
+set showmode
+set showcmd
+set autoindent		" Auto indent
+set tabstop=4		" 4 spaces for a tab
+set incsearch		" Incremental search
+"set hlsearch		" High-light for search result
+set ignorecase		" Ignore upper/lower cases during search
+set smartcase
+set cmdheight=2		" Better display for messages
+set updatetime=300	" You will have bad experience for diagnostic messages when it's default 4000
+set shortmess+=c	" don't give |ins-completion-menu| messages
+set signcolumn=yes	" always show signcolumns
+
+if empty(glob('~/.vim/autoload/plug.vim'))
+	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+		\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+	autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+call plug#begin('~/.vim/plugged')
+Plug 'altercation/vim-colors-solarized'
+Plug 'Yggdroot/indentLine'		" Indent formatting
+Plug 'easymotion/vim-easymotion'
+Plug 'vim-airline/vim-airline'	" Status line plugin
+Plug 'vim-airline/vim-airline-themes'
+Plug 'majutsushi/tagbar'
+Plug 'scrooloose/nerdtree'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+call plug#end()
+
+" Change <Leader> key from '\' to '.'
+let mapleader='.'
+
+" Code folding
+set foldenable
+set foldmethod=indent           " manual,indent,expr,syntax,diff,marker
+set foldlevel=99
+
+let g:FoldMethod = 0
+map <leader>zz :call ToggleFold()<CR>
+fun! ToggleFold()
+	if g:FoldMethod == 0
+		exe "normal! zM"
+		let g:FoldMethod = 1
+	else
+		exe "normal! zR"
+		let g:FoldMethod = 0
+	endif
+endfun
+
+" Smart way to move between windows
+map <C-j> <C-W>j
+map <C-k> <C-W>k
+map <C-h> <C-W>h
+map <C-l> <C-W>l
+	
+" Plugin solarized setting
+set background=dark
+if !has('gui_running')
+	let g:solarized_termcolors=256	" This 2 lines should be ahead of
+	let g:solarized_termtrans=1		" colorscheme when term color not set
+endif
+colorscheme solarized
+
+" Plugin IndentLine setting
+let g:indentLine_setColors = 0		" Disable overwriting 'Conceal' color
+"let g:indentLine_color_term = 239
+let g:indentLine_char = '┆'
+let g:indentLine_enabled = 1
+let g:indentLine_conceallevel = 0	" Disable hidding specific chars
+
+" Plugin Easymotion setting
+map f <Plug>(easymotion-prefix)
+
+" Plugin airline/themes setting
+let g:airline#extensions#tabline#enabled = 1	" Display all buffers when only 1 tab
+let g:airline_solarized_bg='dark'		" Theme
+let g:airline_powerline_fonts=0
+let g:airline#extensions#tabline#exclude_preview = 1
+let g:airline#extensions#tabline#show_buffers = 1
+let g:airline#extensions#tabline#tab_nr_type = 2 " splits and tab number
+let g:airline#extensions#bufferline#enabled = 1
+
+" Plugin Tagbar setting
+nmap <F8> :TagbarToggle<CR>
+
+" Plugin NerdTree setting
+nmap <F9> :NERDTreeToggle<CR>
+
