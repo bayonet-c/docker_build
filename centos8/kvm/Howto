@@ -1,0 +1,14 @@
+Create a VM machine:
+
+virt-install \
+--name centos8 \
+--ram 4096 \
+--disk path=/var/kvm/images/centos8.img,size=32 \
+--vcpus 1 \
+--os-type linux \
+--os-variant rhel8.0 \
+--network bridge=ovsbr0 \
+--graphics none \
+--console pty,target_type=serial \
+--location '/tank/software/Software/Linux/CentOS8/CentOS-8.2.2004-x86_64-minimal.iso' \
+--extra-args 'console=ttyS0,115200n8 serial'
