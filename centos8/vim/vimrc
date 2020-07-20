@@ -114,3 +114,5 @@ nmap <F8> :TagbarToggle<CR>
 " Plugin NerdTree setting
 nmap <F9> :NERDTreeToggle<CR>
 
+" Disable coc plugin version check
+let g:coc_disable_startup_warning = 1
