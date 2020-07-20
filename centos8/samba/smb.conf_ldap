@@ -1,0 +1,41 @@
+[global]
+	workgroup = WORKGROUP
+	server string = msg8 samba server
+
+	# While omitted, netbios uses the first part of the DNS name
+	#netbios name = msg8
+
+	log file = /var/log/samba/log.%m
+	max log size = 50
+
+	# No restriction on samba connection numbers
+	max connections = 0
+	# Never disconnect a client without openning any file
+	deadtime = 0
+	security = user
+	guest account = nobody
+	passdb backend  = ldapsam:ldap://msg8.srv.home
+	ldap suffix = "dc=srv,dc=home" 
+	ldap admin dn = "cn=Manager,dc=srv,dc=home" 
+	ldap user suffix = "ou=People,dc=srv,dc=home" 
+	ldap group suffix = "ou=Group,dc=srv,dc=home" 
+	ldap passwd sync = yes
+	ldap ssl = no
+
+[home]
+	comment = home directory
+	path = /home/%U
+	browseable = yes
+	writable = yes
+	available = yes
+	public = no
+	create mask = 0644
+	directory mask = 0755
+
+[share]
+	comment = share for all
+	path = /mnt/store
+	writable = no
+	browseable= yes
+	public = yes
+

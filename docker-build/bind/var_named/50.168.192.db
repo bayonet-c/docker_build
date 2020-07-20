@@ -1,0 +1,16 @@
+$TTL 86400
+@   IN  SOA     msg8.srv.home. root.srv.home. (
+        2020072001  ;Serial
+        3600        ;Refresh
+        1800        ;Retry
+        604800      ;Expire
+        86400       ;Minimum TTL
+)
+
+        IN  NS      msg8.srv.home.
+
+        IN  PTR     srv.home.
+        IN  A       255.255.255.0
+
+10      IN  PTR     msg8.srv.home.
+20      IN  PTR     t620.srv.home.

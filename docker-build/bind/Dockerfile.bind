@@ -1,0 +1,16 @@
+FROM centos
+MAINTAINER Jerend Cao "bayonet_c1@163.com"
+
+USER root
+
+RUN yum update -y; \
+    yum install -y bind bind-utils
+
+COPY bootstrap.sh /usr/sbin/bootstrap.sh
+RUN  chmod a+x /usr/sbin/bootstrap.sh
+
+EXPOSE 53/tcp 53/udp
+VOLUME ["/conf"]
+
+# Define default command.
+CMD ["/usr/sbin/bootstrap.sh"]

@@ -1,0 +1,17 @@
+FROM centos
+MAINTAINER Jerend Cao "bayonet_c1@163.com"
+
+ENV CHRONY_PORT=123
+
+USER root
+
+RUN yum update -y; \
+    yum install -y chrony
+
+RUN sed -i '/^pool /cpool ntp.ntsc.ac.cn' /etc/chrony.conf; \
+    sed -i '/^#allow /callow all' /etc/chrony.conf
+
+EXPOSE $CHRONY_PORT
+
+# Define default command.
+CMD ["/usr/sbin/chronyd", "-d"]
