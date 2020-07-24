@@ -1,0 +1,38 @@
+[global]
+	workgroup = WORKGROUP
+	realm = srv.home
+	server string = msg8 samba server
+
+	dedicated keytab file = FILE:/etc/samba/samba.keytab
+	kerberos method = dedicated keytab
+
+	# While omitted, netbios uses the first part of the DNS name
+	#netbios name = msg8
+
+	log file = /var/log/samba/log.%m
+	max log size = 50
+
+	# No restriction on samba connection numbers
+	max connections = 0
+	# Never disconnect a client without openning any file
+	deadtime = 0
+	security = ads
+	guest account = nobody
+
+[home]
+	comment = home directory
+	path = /home/%U
+	browseable = yes
+	writable = yes
+	available = yes
+	public = no
+	create mask = 0644
+	directory mask = 0755
+
+[share]
+	comment = share for all
+	path = /mnt
+	writable = no
+	browseable= yes
+	public = yes
+

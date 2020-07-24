@@ -1,5 +1,13 @@
 {
-"registry-mirrors": ["https://registry.docker-cn.com"],
-"dns": ["192.168.50.1"],
-"dns-search": ["srv.home"]
+  "registry-mirrors": [
+    "https://registry.docker-cn.com",
+    "https://reg-mirror.qiniu.com",
+    "https://docker.mirrors.ustc.edu.cn",
+    "https://dockerhub.azk8s.cn",
+    "https://hub-mirror.c.163.com",
+    "https://registry.docker-cn.com"
+  ],
+  "dns": ["192.168.50.1"],
+  "dns-search": ["srv.home"],
+  "exec-opts": ["native.cgroupdriver=systemd"]
 }
