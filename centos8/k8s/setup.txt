@@ -1,0 +1,72 @@
+1. Set hostname, edit /etc/hosts, swap off, turn off firewalld and selinux;
+
+2. Add the following lines to /etc/sysctl.conf to enable iptable:
+	net.bridge.bridge-nf-call-iptables = 1
+	net.bridge.bridge-nf-call-ip6tables = 1
+
+3. Add mirrors for repo:
+	yum install -y yum-utils epel-release
+	yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+	yum makecache
+	rpm --import https://mirrors.aliyun.com/docker-ce/linux/centos/gpg
+
+4. Better remove podman (it might be old for docker 19) and install Docker-ce; note that containerd.io>=1.2.2-3 is required for latest docker (19.03.11):
+	yum remove podman
+	yum -y install https://mirrors.aliyun.com/docker-ce/linux/centos/7/x86_64/stable/Packages/containerd.io-1.2.6-3.3.el7.x86_64.rpm
+	yum install docker-ce
+	# Before start docker, edit /etc/docker/daemon.json to add registry and make systemd as the cgroup engine; can be copied from config repo.
+	systemctl enable --now docker
+
+5. Add k8s repo and install
+	cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+	====================================================
+	[kubernetes]
+	name=Kubernetes
+	baseurl=https://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64
+	enabled=1
+	gpgcheck=0
+	EOF
+	====================================================
+	yum install kubectl kubelet kubeadm
+	systemctl enable --now kubelet
+
+6. Config k8s and start
+	kubeadm config print init-defaults > k8s_init.yaml
+	# Edit k8s_init.yaml to change the advertiseAddress to your master's IP address,
+	# and imageRepository to mirror like registry.aliyuncs.com/google_containers
+	# Download basic images and initialize k8s. Note that you need to backup the last line
+	# of 'kubeadm init' output as it will be used for working nodes to join the cluster.
+	kubeadm config images pull --config=init-config.yaml
+	kubeadm init --config=k8s_init.yaml
+	# For regular user, do the following:
+	mkdir -p $HOME/.kube
+	sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+	sudo shown $(id -u):$(id -g) $HOME/.kube/config
+	# If you want to make k8s master as a working node, do the following:
+	kubectl taint nodes --all node-role.kubernetes.io/master-
+
+7. Add puase container with Pod creation
+	# Edit /etc/kubernetes/kubelet with following and restart kubelet service.
+	KUBELET_ARGS="--kubeconfig=/etc/kubernetes/kubeconfig --hostname-override=192.168.50.10 --log-dir=/var/log/kubernetes --v=0 --pod-infra-container-image=pause:3.1
+
+8. Install Working nodes and join cluster
+	# On working nodes, install docker/kubelet/kubeadm (no kubectl) as master node; start docker
+	# and kubelet services and edit join-config.yaml file as following:
+	====================================================
+	apiVersion: kubeadm.k8s.io/v1beta1
+	kind: JoinConfiguration
+	discovery:
+	  bootstrapToken:
+	    apiServerEndpoint: 192.168.50.10:6443
+	    token: ah9koe.nvuvz2v60iam0e0d
+	    unsafeSkipCAVerification: true
+	  tlsBootstrapToken: ah9koe.nvuvz2v60iam0e0d
+	====================================================
+	# Change apiServerEndpoint to your master's IP address and tokens are from output of
+	# 'kubeadm init' output on master.
+	# Or, you can directly go with instruction of the last line of 'kubeadm init' output on
+	# master.
+
+9. Install Weave network CNI
+	kubectl apply -f "https://cloud.weave.works/k8s/net?k8s-version=$(kubectl version | base64 | tr -d '\n')"
+
