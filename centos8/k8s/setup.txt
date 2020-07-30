@@ -36,7 +36,7 @@
 	# and imageRepository to mirror like registry.aliyuncs.com/google_containers
 	# Download basic images and initialize k8s. Note that you need to backup the last line
 	# of 'kubeadm init' output as it will be used for working nodes to join the cluster.
-	kubeadm config images pull --config=init-config.yaml
+	kubeadm config images pull --config=k8s_init.yaml
 	kubeadm init --config=k8s_init.yaml
 	# For regular user, do the following:
 	mkdir -p $HOME/.kube
