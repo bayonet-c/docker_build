@@ -47,7 +47,7 @@
 
 7. Add puase container with Pod creation
 	# Edit /etc/kubernetes/kubelet with following and restart kubelet service.
-	KUBELET_ARGS="--kubeconfig=/etc/kubernetes/kubeconfig --hostname-override=192.168.50.10 --log-dir=/var/log/kubernetes --v=0 --pod-infra-container-image=pause:3.1
+	KUBELET_ARGS="--kubeconfig=/etc/kubernetes/kubeconfig --hostname-override=192.168.50.10 --log-dir=/var/log/kubernetes --v=0 --pod-infra-container-image=pause:3.2
 
 8. Install Working nodes and join cluster
 	# On working nodes, install docker/kubelet/kubeadm (no kubectl) as master node; start docker
