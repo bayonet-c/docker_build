@@ -43,7 +43,7 @@
 	sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 	sudo chown $(id -u):$(id -g) $HOME/.kube/config
 	# If you want to make k8s master as a working node, do the following:
-	kubectl taint nodes --all node-role.kubernetes.io/master-
+	kubectl taint nodes --all node-role.kubernetes.io/master=:NoSchedule
 
 7. Add puase container with Pod creation
 	# Edit /etc/kubernetes/kubelet with following and restart kubelet service.
