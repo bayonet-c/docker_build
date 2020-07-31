@@ -1,3 +1,9 @@
+" The tmux will alway set $TERM to 'screen' so vim need to check and set it to
+" correct value to enable color
+if exists ('$TMUX')
+	set term=xterm-256color
+endif
+
 set encoding=utf-8
 set fileencodings=utf-8,ucs-bom,gbk,gb2312,gb18030,default
 set fileformats=unix,dos,mac	" Prefer UNIX over Windows over OSX
