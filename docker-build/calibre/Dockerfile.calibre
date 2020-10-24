@@ -17,7 +17,8 @@ RUN	wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sh /dev
 RUN  apt install -y xdg-utils
 
 RUN wget http://issuecdn.baidupcs.com/issue/netdisk/LinuxGuanjia/3.4.1/baidunetdisk_3.4.1_amd64.deb; \
-	dpkg -i baidunetdisk_3.4.1_amd64.deb
+	dpkg -i baidunetdisk_3.4.1_amd64.deb; \
+	rm -f baidunetdisk_3.4.1_amd64.deb
 
 VOLUME ["/library"]
 
