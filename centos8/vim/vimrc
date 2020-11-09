@@ -9,7 +9,7 @@ set fileencodings=utf-8,ucs-bom,gbk,gb2312,gb18030,default
 set fileformats=unix,dos,mac	" Prefer UNIX over Windows over OSX
 set nocompatible	" Enable enhanced features not compatible with vi
 
-syntax on			" Syntax colored
+syntax on		" Syntax colored
 filetype off		" Disable filetype detection from filename
 filetype plugin indent on	" Enable file-type dependent plugin loading and indent syntax
 set shell=bash
@@ -18,23 +18,26 @@ set nowritebackup	" Avoid confliction with some plugins
 set noerrorbells	" No beeps
 set autowrite		" Automatically save before :next, :makee etc
 set autoread		" Automatically reread changed files"a
-set confirm			" Need to confirm with read-only and un-saved files
-set hidden			" Allow buffer switch when un-saved
-set noexpandtab		" Don't expand TAB with spaces
+set confirm		" Need to confirm with read-only and un-saved files
+set hidden		" Allow buffer switch when un-saved
+
 set splitright		" Split window on right
 set splitbelow		" Split window below
 set clipboard+=unnamed	" Shared clipboard"
 set history=1000	" Command history
 set laststatus=2	" Height of command line
-set number			" Enable line numbers
+set number		" Enable line numbers
 set numberwidth=4	" Line number width
-set ruler			" Enable ruler
+set ruler		" Enable ruler
 set showmatch		" Show paired brackets
 set matchtime=1		" Time period for showing paired brackets
 set showmode
 set showcmd
+set shiftwidth=4
+set softtabstop=4
+set tabstop=4
+set expandtab		" Expand TAB with spaces
 set autoindent		" Auto indent
-set tabstop=4		" 4 spaces for a tab
 set incsearch		" Incremental search
 "set hlsearch		" High-light for search result
 set ignorecase		" Ignore upper/lower cases during search
