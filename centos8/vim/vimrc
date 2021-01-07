@@ -4,6 +4,7 @@ if exists ('$TMUX')
 	set term=xterm-256color
 endif
 
+set guifont=Consolas:h10:cANSI
 set encoding=utf-8
 set fileencodings=utf-8,ucs-bom,gbk,gb2312,gb18030,default
 set fileformats=unix,dos,mac	" Prefer UNIX over Windows over OSX
