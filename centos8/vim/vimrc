@@ -48,6 +48,13 @@ set updatetime=300	" You will have bad experience for diagnostic messages when i
 set shortmess+=c	" don't give |ins-completion-menu| messages
 set signcolumn=yes	" always show signcolumns
 
+if has("win32")
+    set shell=C:\Windows\Sysnative\wsl.exe
+    set shellpipe=|
+    set shellredir=>
+    set shellcmdflag=
+endi
+
 if empty(glob('~/.vim/autoload/plug.vim'))
 	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
 		\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -62,6 +69,8 @@ Plug 'vim-airline/vim-airline'	" Status line plugin
 Plug 'vim-airline/vim-airline-themes'
 Plug 'majutsushi/tagbar'
 Plug 'scrooloose/nerdtree'
+Plug 'vimoutliner/vimoutliner'
+Plug 'vim-voom/VOoM'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
 
@@ -106,8 +115,8 @@ let g:indentLine_char = '┆'
 let g:indentLine_enabled = 1
 let g:indentLine_conceallevel = 0	" Disable hidding specific chars
 
-" Plugin Easymotion setting
-map f <Plug>(easymotion-prefix)
+" Plugin Easymotion setting; default prefix is <leader><leader>
+" map f <Plug>(easymotion-prefix)
 
 " Plugin airline/themes setting
 let g:airline#extensions#tabline#enabled = 1	" Display all buffers when only 1 tab
