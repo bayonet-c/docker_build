@@ -1,53 +1,20 @@
 " The tmux will alway set $TERM to 'screen' so vim need to check and set it to
 " correct value to enable color
 if exists ('$TMUX')
-	set term=xterm-256color
+    set term=xterm-256color
 endif
 
 set guifont=Consolas:h10:cANSI
 set encoding=utf-8
 set fileencodings=utf-8,ucs-bom,gbk,gb2312,gb18030,default
 set fileformats=unix,dos,mac	" Prefer UNIX over Windows over OSX
-set nocompatible	" Enable enhanced features not compatible with vi
+set nocompatible    " Enable enhanced features not compatible with vi
 
-syntax on		" Syntax colored
-filetype off		" Disable filetype detection from filename
+syntax on           " Syntax colored
+filetype off        " Disable filetype detection from filename
 filetype plugin indent on	" Enable file-type dependent plugin loading and indent syntax
+
 set shell=bash
-set nobackup		" Avoid confliction with some plugins
-set nowritebackup	" Avoid confliction with some plugins
-set noerrorbells	" No beeps
-set autowrite		" Automatically save before :next, :makee etc
-set autoread		" Automatically reread changed files"a
-set confirm		" Need to confirm with read-only and un-saved files
-set hidden		" Allow buffer switch when un-saved
-
-set splitright		" Split window on right
-set splitbelow		" Split window below
-set clipboard+=unnamed	" Shared clipboard"
-set history=1000	" Command history
-set laststatus=2	" Height of command line
-set number		" Enable line numbers
-set numberwidth=4	" Line number width
-set ruler		" Enable ruler
-set showmatch		" Show paired brackets
-set matchtime=1		" Time period for showing paired brackets
-set showmode
-set showcmd
-set shiftwidth=4
-set softtabstop=4
-set tabstop=4
-set expandtab		" Expand TAB with spaces
-set autoindent		" Auto indent
-set incsearch		" Incremental search
-"set hlsearch		" High-light for search result
-set ignorecase		" Ignore upper/lower cases during search
-set smartcase
-set cmdheight=2		" Better display for messages
-set updatetime=300	" You will have bad experience for diagnostic messages when it's default 4000
-set shortmess+=c	" don't give |ins-completion-menu| messages
-set signcolumn=yes	" always show signcolumns
-
 if has("win32")
     set shell=C:\Windows\Sysnative\wsl.exe
     set shellpipe=|
@@ -55,10 +22,44 @@ if has("win32")
     set shellcmdflag=
 endi
 
+set nobackup        " Avoid confliction with some plugins
+set nowritebackup   " Avoid confliction with some plugins
+set noerrorbells    " No beeps
+set autowrite       " Automatically save before :next, :makee etc
+set autoread        " Automatically reread changed files"a
+set confirm	        " Need to confirm with read-only and un-saved files
+set hidden          " Allow buffer switch when un-saved
+
+set splitright      " Split window on right
+set splitbelow      " Split window below
+set clipboard+=unnamed  " Shared clipboard"
+set history=1000    " Command history
+set laststatus=2    " Height of command line
+set number          " Enable line numbers
+set numberwidth=4   " Line number width
+set ruler           " Enable ruler
+set showmatch       " Show paired brackets
+set matchtime=1     " Time period for showing paired brackets
+set showmode
+set showcmd
+set shiftwidth=4
+set softtabstop=4
+set tabstop=4
+set expandtab       " Expand TAB with spaces
+set autoindent      " Auto indent
+set incsearch       " Incremental search
+"set hlsearch       " High-light for search result
+set ignorecase		" Ignore upper/lower cases during search
+set smartcase
+set cmdheight=2     " Better display for messages
+set updatetime=300  " You will have bad experience for diagnostic messages when it's default 4000
+set shortmess+=c    " don't give |ins-completion-menu| messages
+set signcolumn=yes  " always show signcolumns
+
 if empty(glob('~/.vim/autoload/plug.vim'))
-	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-		\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-	autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+    silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
 call plug#begin('~/.vim/plugged')
@@ -67,10 +68,15 @@ Plug 'Yggdroot/indentLine'		" Indent formatting
 Plug 'easymotion/vim-easymotion'
 Plug 'vim-airline/vim-airline'	" Status line plugin
 Plug 'vim-airline/vim-airline-themes'
-Plug 'majutsushi/tagbar'
+"Plug 'majutsushi/tagbar'       " Replaced by LeaderF
+Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }      " Fuzzy finder
+                                            " Prefer universal-ctags or gtags
 Plug 'scrooloose/nerdtree'
-Plug 'vimoutliner/vimoutliner'
-Plug 'vim-voom/VOoM'
+"Plug 'vimoutliner/vimoutliner'
+"Plug 'vim-voom/VOoM'
+
+
+" This coc.nvim plugin is used for auto-completion. Use :CocList/:CocInstall for language extensions.
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 call plug#end()
 
@@ -85,26 +91,27 @@ set foldlevel=99
 let g:FoldMethod = 0
 map <leader>zz :call ToggleFold()<CR>
 fun! ToggleFold()
-	if g:FoldMethod == 0
-		exe "normal! zM"
-		let g:FoldMethod = 1
-	else
-		exe "normal! zR"
-		let g:FoldMethod = 0
-	endif
+    if g:FoldMethod == 0
+        exe "normal! zM"
+        let g:FoldMethod = 1
+    else
+        exe "normal! zR"
+        let g:FoldMethod = 0
+    endif
 endfun
 
-" Smart way to move between windows
-map <C-j> <C-W>j
-map <C-k> <C-W>k
-map <C-h> <C-W>h
-map <C-l> <C-W>l
+" Smart way to move between windows, but following assignments got conflicts
+" with MacOS
+" map <C-j> <C-W>j
+" map <C-k> <C-W>k
+" map <C-h> <C-W>h
+" map <C-l> <C-W>l
 	
 " Plugin solarized setting
 set background=dark
 if !has('gui_running')
-	let g:solarized_termcolors=256	" This 2 lines should be ahead of
-	let g:solarized_termtrans=1		" colorscheme when term color not set
+    let g:solarized_termcolors=256	" This 2 lines should be ahead of
+    let g:solarized_termtrans=1		" colorscheme when term color not set
 endif
 colorscheme solarized
 
@@ -128,7 +135,10 @@ let g:airline#extensions#tabline#tab_nr_type = 2 " splits and tab number
 let g:airline#extensions#bufferline#enabled = 1
 
 " Plugin Tagbar setting
-nmap <F8> :TagbarToggle<CR>
+" nmap <F8> :TagbarToggle<CR>
+
+" Plugin LeaderF setting
+let g:Lf_WindowPosition = 'popup'   " Set popup mode
 
 " Plugin NerdTree setting
 nmap <F9> :NERDTreeToggle<CR>
