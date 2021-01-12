@@ -64,24 +64,24 @@ endif
 
 call plug#begin('~/.vim/plugged')
 Plug 'altercation/vim-colors-solarized'
-Plug 'Yggdroot/indentLine'		" Indent formatting
+Plug 'Yggdroot/indentLine'              " Indent formatting
 Plug 'easymotion/vim-easymotion'
-Plug 'vim-airline/vim-airline'	" Status line plugin
+Plug 'vim-airline/vim-airline'          " Status line plugin
 Plug 'vim-airline/vim-airline-themes'
-"Plug 'majutsushi/tagbar'       " Replaced by LeaderF
+"Plug 'majutsushi/tagbar'               " Replaced by LeaderF
 Plug 'Yggdroot/LeaderF', { 'do': ':LeaderfInstallCExtension' }      " Fuzzy finder
-                                            " Prefer universal-ctags or gtags
+                                        " Prefer universal-ctags or gtags
 Plug 'scrooloose/nerdtree'
 "Plug 'vimoutliner/vimoutliner'
 "Plug 'vim-voom/VOoM'
 
-
 " This coc.nvim plugin is used for auto-completion. Use :CocList/:CocInstall for language extensions.
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'puremourning/vimspector'
 call plug#end()
 
 " Change <Leader> key from '\' to '.'
-let mapleader='.'
+" let mapleader='.'
 
 " Code folding
 set foldenable
@@ -145,3 +145,6 @@ nmap <F9> :NERDTreeToggle<CR>
 
 " Disable coc plugin version check
 let g:coc_disable_startup_warning = 1
+
+" Default key-mapping for vimspector
+let g:vimspector_enable_mappings = 'HUMAN'
