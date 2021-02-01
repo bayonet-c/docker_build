@@ -62,7 +62,7 @@
         (set-face-attribute 'default nil :font "Microsoft Yahei Mono 12") 
         (dolist (charset '(kana han symbol cjk-misc bopomofo)) 
           (set-fontset-font (frame-parameter nil 'font) charset (font-spec :family "Microsoft Yahei Mono" :size 12))))
-    (if *is-mac* set-face-attribute 'default nil :font "Monaco 12"))
+    (if *is-mac* (set-face-attribute 'default nil :font "Monaco 12")))
   ;; Disable line numbers for some modes
   (dolist (mode '(org-mode-hook
                   term-mode-hook
