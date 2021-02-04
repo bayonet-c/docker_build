@@ -1,4 +1,5 @@
 
+
 (defconst *is-mac* (eq system-type 'darwin)) 
 (defconst *is-linux* (eq system-type 'gnu/linux)) 
 (defconst *is-windows* (or (eq system-type 'ms-dos) (eq system-type 'windows-nt)))
@@ -55,7 +56,9 @@
   :config 
   (defalias 'yes-or-no-p 'y-or-n-p)
   (column-number-mode)
+  (setq display-line-numbers-type 'relative) 
   (global-display-line-numbers-mode t)
+  (show-paren-mode 1)
   ;; Font settings 
   (if *is-windows* 
       (progn 
@@ -122,71 +125,6 @@
   :ensure t
   :bind (("M-s" . avy-goto-word-1)))
 
-(use-package lsp-mode
-  :commands (lsp lsp-deferred)
-  :hook (lsp-mode . efs/lsp-mode-setup)
-  :init
-  (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
-  :config
-  (lsp-enable-which-key-integration t))
-
-(use-package lsp-ui
-  :hook (lsp-mode . lsp-ui-mode)
-  :custom
-  (lsp-ui-doc-position 'bottom))
-
-(use-package lsp-treemacs
-  :after lsp)
-
-(use-package lsp-ivy)
-
-(use-package dap-mode
-  ;; Uncomment the config below if you want all UI panes to be hidden by default!
-  ;; :custom
-  ;; (lsp-enable-dap-auto-configure nil)
-  ;; :config
-  ;; (dap-ui-mode 1)
-
-  :config
-  ;; Set up Node debugging
-  (require 'dap-node)
-  (dap-node-setup)) ;; Automatically installs Node debug adapter if needed
-
-(use-package typescript-mode
-  :mode "\\.ts\\'"
-  :hook (typescript-mode . lsp-deferred)
-  :config
-  (setq typescript-indent-level 2))
-
-(use-package python-mode
-  :ensure t
-  :hook (python-mode . lsp-deferred)
-  :custom
-  ;; NOTE: Set these if Python 3 is called "python3" on your system!
-  ;; (python-shell-interpreter "python3")
-  ;; (dap-python-executable "python3")
-  (dap-python-debugger 'debugpy)
-  :config
-  (require 'dap-python))
-
-(use-package pyvenv
-  :config
-  (pyvenv-mode 1))
-
-(use-package company
-  :after lsp-mode
-  :hook (lsp-mode . company-mode)
-  :bind (:map company-active-map
-         ("<tab>" . company-complete-selection))
-        (:map lsp-mode-map
-         ("<tab>" . company-indent-or-complete-common))
-  :custom
-  (company-minimum-prefix-length 1)
-  (company-idle-delay 0.0))
-
-(use-package company-box
-  :hook (company-mode . company-box-mode))
-
 (use-package projectile
   :diminish projectile-mode
   :config (projectile-mode)
@@ -206,3 +144,93 @@
   :custom
   (magit-display-buffer-function #'magit-display-buffer-same-window-except-diff-v1))
 
+(use-package company
+  :diminish (company-mode " Cmp.")
+  :defines (company-dabbrev-ignore-case company-dabbrev-downcase)
+  :hook (after-init . global-company-mode)
+  :config (setq company-dabbrev-code-everywhere t
+		        company-dabbrev-code-modes t
+		        company-dabbrev-code-other-buffers 'all
+		        company-dabbrev-downcase nil
+		        company-dabbrev-ignore-case t
+		        company-dabbrev-other-buffers 'all
+		        company-require-match nil
+		        company-minimum-prefix-length 1
+		        company-show-numbers t
+		        company-tooltip-limit 20
+		        company-idle-delay 0
+		        company-echo-delay 0
+		        company-tooltip-offset-display 'scrollbar
+		        company-begin-commands '(self-insert-command))
+  (eval-after-load 'company
+    '(add-to-list 'company-backends
+                  '(company-abbrev company-yasnippet company-capf))))
+
+(use-package lsp-mode
+  ;; add prog-mode to lsp instead of adding one by one
+  ;; :hook ((prog-mode . (lsp-deferred))
+  :commands (lsp lsp-deferred)
+  :hook ((lsp-mode . lsp-enable-which-key-integration)
+         (prog-mode . (lambda() (unless (derived-mode-p 'emacs-lisp-mode 'lisp-mode)(lsp-deferred))))
+	 (python-mode . lsp-deferred)
+         )
+  :init (setq lsp-keep-workspace-alive nil ;; Auto kill LSP server
+              lsp-enable-indentation t
+              lsp-enable-on-type-formatting t
+              lsp-auto-guess-root nil
+              lsp-enable-snippet t
+              lsp-modeline-diagnostics-enable t
+              lsp-modeline-diagnostics-scope :workspace ;; workspace/global/file
+              lsp-idle-delay 0.500
+              read-process-output-max (* 1024 1024) ;; 1MB
+              lsp-completion-provider :capf)
+  :config
+  ;; Configure LSP Clients
+  (use-package lsp-clients
+    :ensure nil
+    :functions (lsp-format-buffer lsp-organize-imports))
+  commands:  (lsp lsp-deferred))
+
+(use-package lsp-ui
+  :after lsp-mode
+  :commands lsp-ui-mode
+  :hook ((lsp-mode . lsp-ui-mode)
+         (lsp-ui-mode . lsp-modeline-code-actions-mode)
+         ;; (lsp-ui-mode . lsp-ui-peek-mode) ;; drop it 'cause it has BUGs
+         )
+  :init (setq lsp-ui-doc-enable t
+              lsp-ui-doc-use-webkit nil
+              lsp-ui-doc-delay .3
+              lsp-ui-doc-include-signature t
+              lsp-ui-doc-position 'at-point ;; top/bottom/at-point
+              lsp-eldoc-enable-hover t ;; eldoc displays in minibuffer
+              lsp-ui-sideline-enable nil
+              lsp-ui-sideline-show-hover nil
+              lsp-ui-sideline-show-code-actions t
+              lsp-ui-sideline-show-diagnostics t
+              lsp-ui-sideline-ignore-duplicate t
+              lsp-modeline-code-actions-segments '(count name)
+              lsp-headerline-breadcrumb-enable nil)
+  :config
+  (setq lsp-ui-flycheck-enable nil)
+  (define-key lsp-ui-mode-map [remap xref-find-definitions] #'lsp-ui-peek-find-definitions)
+  (define-key lsp-ui-mode-map [remap xref-find-references] #'lsp-ui-peek-find-references)
+  (when (display-graphic-p)
+    (treemacs-resize-icons 14))
+  )
+
+(use-package lsp-ivy :commands lsp-ivy-workspace-symbol)
+(use-package lsp-treemacs
+  :commands lsp-treemacs-errors-list
+  :init
+  (when (display-graphic-p)
+    (treemacs-resize-icons 14)))
+
+(use-package dap-mode
+  :diminish
+  :hook ((lsp-mode . dap-mode)
+         (dap-mode . dap-ui-mode)
+	     (dap-mode . dap-tooltip-mode)
+         (python-mode . (lambda() (require 'dap-python)))
+         (go-mode . (lambda() (require 'dap-go)))
+         (java-mode . (lambda() (require 'dap-java)))))
