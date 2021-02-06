@@ -75,9 +75,11 @@ Plug 'scrooloose/nerdtree'
 "Plug 'vimoutliner/vimoutliner'
 "Plug 'vim-voom/VOoM'
 
+Plug 'ludovicchabant/vim-gutentags' " ctags/gtags/cscope management
+Plug 'skywind3000/gutentags_plus'   " handles switching between cscope databases automatically before search
 " This coc.nvim plugin is used for auto-completion. Use :CocList/:CocInstall for language extensions.
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'dense-analysis/ale'   " Another LSP client that can co-operate with coc.vim
+" Plug 'dense-analysis/ale'   " Another LSP client that can co-operate with coc.vim
 call plug#end()
 
 " Change <Leader> key from '\' to '.'
@@ -147,3 +149,33 @@ nmap <F9> :NERDTreeToggle<CR>
 " Disable coc plugin version check
 let g:coc_disable_startup_warning = 1
 
+" Enable gutentags/gtags for addtion 50 languages other than 6 standard languages
+" To enable gtags, do 'pip install pygments' firstly
+let $GTAGSLABEL = 'native-pygments'
+" gtags config file for MacOS/Linux, on windows it should be
+" gtags/share/gtags/gtags.conf
+let $GTAGSCONF = '/usr/local/share/gtags/gtags.conf'
+" How gutentags will identify the project directory
+let g:gutentags_project_root = ['.root', '.svn', '.git', '.hg', '.project']
+let g:gutentags_ctags_tagfile = '.tags'
+" Enable both ctags and gtags support
+let g:gutentags_modules = []
+if executable('ctags')
+	let g:gutentags_modules += ['ctags']
+endif
+if executable('gtags-cscope') && executable('gtags')
+	let g:gutentags_modules += ['gtags_cscope']
+endif
+" Put the tag files for ctags/gtags into ~/.cache/tags directory
+let g:gutentags_cache_dir = expand('~/.cache/tags')
+" ctags parameters, note for old Exuberant-ctags, --extra=+q is not applicable
+let g:gutentags_ctags_extra_args = ['--fields=+niazS']
+" let g:gutentags_ctags_extra_args = ['--fields=+niazS', '--extra=+q']
+let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
+let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
+" For universal ctags; not applicable for old Exuberant-ctags
+" let g:gutentags_ctags_extra_args += ['--output-format=e-ctags']
+" Disable gutentags from auto-loading gtags
+let g:gutentags_auto_add_gtags_cscope = 0
+
+let g:coc_global_extensions = ['coc-json', 'coc-git', 'coc-clangd', 'coc-java', 'coc-go', 'coc-jedi']
