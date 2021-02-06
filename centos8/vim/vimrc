@@ -77,7 +77,7 @@ Plug 'scrooloose/nerdtree'
 
 " This coc.nvim plugin is used for auto-completion. Use :CocList/:CocInstall for language extensions.
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'puremourning/vimspector'
+Plug 'dense-analysis/ale'   " Another LSP client that can co-operate with coc.vim
 call plug#end()
 
 " Change <Leader> key from '\' to '.'
@@ -139,6 +139,7 @@ let g:airline#extensions#bufferline#enabled = 1
 
 " Plugin LeaderF setting
 let g:Lf_WindowPosition = 'popup'   " Set popup mode
+let g:Lf_GtagsAutoGenerate = 1      " Auto generate Gtags and stored in $HOME/.LfCache/gtags/
 
 " Plugin NerdTree setting
 nmap <F9> :NERDTreeToggle<CR>
@@ -146,5 +147,3 @@ nmap <F9> :NERDTreeToggle<CR>
 " Disable coc plugin version check
 let g:coc_disable_startup_warning = 1
 
-" Default key-mapping for vimspector
-let g:vimspector_enable_mappings = 'HUMAN'
